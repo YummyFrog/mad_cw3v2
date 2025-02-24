@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Task Model
 class Task {
   final String name;
   bool isCompleted;
@@ -24,26 +25,31 @@ class Task {
   Task({required this.name, this.isCompleted = false});
 }
 
+// TaskListScreen Widget
 class TaskListScreen extends StatefulWidget {
   @override
   _TaskListScreenState createState() => _TaskListScreenState();
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
+  // List of tasks
   List<Task> _tasks = [];
 
+  // Method to add a new task
   void _addTask(String taskName) {
     setState(() {
       _tasks.add(Task(name: taskName));
     });
   }
 
+  // Method to toggle the completion status of a task
   void _toggleTaskCompletion(int index) {
     setState(() {
       _tasks[index].isCompleted = !_tasks[index].isCompleted;
     });
   }
 
+  // Method to remove a task
   void _removeTask(int index) {
     setState(() {
       _tasks.removeAt(index);
@@ -56,29 +62,38 @@ class _TaskListScreenState extends State<TaskListScreen> {
       appBar: AppBar(
         title: Text('Task List'),
       ),
-      body: ListView.builder(
-        itemCount: _tasks.length,
-        itemBuilder: (context, index) {
-          final task = _tasks[index];
-          return ListTile(
-            title: Text(
-              task.name,
-              style: TextStyle(
-                decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+      body: _tasks.isEmpty
+          ? Center(
+              child: Text(
+                'No tasks yet!',
+                style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
-            ),
-            trailing: Checkbox(
-              value: task.isCompleted,
-              onChanged: (value) {
-                _toggleTaskCompletion(index);
+            )
+          : ListView.builder(
+              itemCount: _tasks.length,
+              itemBuilder: (context, index) {
+                final task = _tasks[index];
+                return ListTile(
+                  title: Text(
+                    task.name,
+                    style: TextStyle(
+                      decoration: task.isCompleted
+                          ? TextDecoration.lineThrough
+                          : null,
+                    ),
+                  ),
+                  trailing: Checkbox(
+                    value: task.isCompleted,
+                    onChanged: (value) {
+                      _toggleTaskCompletion(index);
+                    },
+                  ),
+                  onLongPress: () {
+                    _removeTask(index);
+                  },
+                );
               },
             ),
-            onLongPress: () {
-              _removeTask(index);
-            },
-          );
-        },
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddTaskDialog(context);
@@ -88,6 +103,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
+  // Method to show a dialog for adding a new task
   void _showAddTaskDialog(BuildContext context) {
     TextEditingController _taskController = TextEditingController();
 
