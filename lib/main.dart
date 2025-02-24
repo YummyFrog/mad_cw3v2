@@ -82,15 +82,25 @@ class _TaskListScreenState extends State<TaskListScreen> {
                           : null,
                     ),
                   ),
-                  trailing: Checkbox(
-                    value: task.isCompleted,
-                    onChanged: (value) {
-                      _toggleTaskCompletion(index);
-                    },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Checkbox to mark task as completed/incomplete
+                      Checkbox(
+                        value: task.isCompleted,
+                        onChanged: (value) {
+                          _toggleTaskCompletion(index);
+                        },
+                      ),
+                      // Delete button to remove the task
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          _removeTask(index);
+                        },
+                      ),
+                    ],
                   ),
-                  onLongPress: () {
-                    _removeTask(index);
-                  },
                 );
               },
             ),
